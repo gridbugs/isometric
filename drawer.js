@@ -1,14 +1,13 @@
-CanvasRenderingContext2D.prototype.moveToV = function(v) {
-    return this.moveTo(v.elements[0], v.elements[1]);
-}
-CanvasRenderingContext2D.prototype.lineToV = function(v) {
-    return this.lineTo(v.elements[0], v.elements[1]);
-}
-
-
 function Drawer(name) {
     this.canvas = $("#"+name)[0];
     this.ctx = this.canvas.getContext("2d");
+    
+    this.ctx.moveToV = function(v) {
+        return this.moveTo(v.elements[0], v.elements[1]);
+    }
+    this.ctx.lineToV = function(v) {
+        return this.lineTo(v.elements[0], v.elements[1]);
+    }
     
     var ctx = this.ctx;
     LineSegment.prototype.draw = function() {
