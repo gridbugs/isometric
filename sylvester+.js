@@ -8,3 +8,7 @@ Vector.prototype.dot = function(v) {
     }
     return sum;
 }
+
+Vector.prototype.projectOn = function(v) {
+  return v.multiply(this.dot(v)/v.dot(v));
+};

@@ -1,39 +1,70 @@
 $(function(){
 
-    var drawer = new IsometricDrawer('screen', $V([5,0]), $V([0,2]), $V([100,100]));
-    
-    window.onresize = window.onload = function() {
-        drawer.canvas.width = window.innerWidth;
-        drawer.canvas.height = window.innerHeight;
-    }
+    var drawer = new IsometricDrawer('screen', $V([15,0]), $V([0,5]), $V([100,150]));
 
-//    var drawer = new Drawer('screen')
     var ht = 45;
-    var walls = [
-        $W([$V([80, 35]), $V([80, 75])], ht), 
-        $W([$V([40, 5]), $V([40, 45])], ht),
-        $W([$V([60, 65]), $V([60, 105])], ht),
-        $W([$V([30, 55]), $V([70, 55])], ht),
-        $W([$V([50, 25]), $V([90, 25])], ht),
-        $W([$V([90, 70]), $V([130, 70])], ht)
+    var base_walls = [
+        $W([$V([0, 0]), $V([0, 20])], ht),
+        $W([$V([0, 20]), $V([20, 20])], ht),
+        $W([$V([20, 20]), $V([20, 0])], ht),
+        $W([$V([20, 0]), $V([0, 0])], ht)
     ];
-    
+
+
+    var regions = [
+        $R([$V([0, 0]), $V([0, 20]), $V([20, 20]), $V([20, 0])], ht, [], [])
+    ];
+
+    var walls = base_walls;
     function draw() {
         drawer.clear();
 
-        for (i in walls) {
-            for (j in walls[i].elements) {
-                walls[i].elements[j] = walls[i].elements[j].rotate(Math.PI/64, $V([80,50]));
-            }
-        }
 
         var order = DrawOrder.arrange(walls, $V([0, -1]));
-        for (i in order) {
+        for (var i in order) {
+
             order[i].draw();
         }
 
-        setTimeout(draw, 40);
+    }
+    var x;
+    function repeat_draw() {
+        for (var i in walls) {
+            for (var j in walls[i].elements) {
+                walls[i].elements[j] = walls[i].elements[j].rotate(Math.PI/64, $V([10,10]));
+            }
+        }
+        for (var i in regions) {
+            for (var j in regions[i].elements) {
+                regions[i].elements[j] = regions[i].elements[j].rotate(Math.PI/64, $V([10,10]));
+            }
+        }        
+        x = regions[0].generate_cross_wall($V([1, 0]));
+        draw();
+        regions[0].draw();
+        x.draw();
+        setTimeout(repeat_draw, 40);
     }
 
-    draw();
+    window.onresize = window.onload = function() {
+        drawer.canvas.width = window.innerWidth;
+        drawer.canvas.height = window.innerHeight;
+
+        draw();
+//    regions[0].draw();
+    }
+
+    var rot = Math.PI/24;
+    for (var i in walls) {
+        for (var j in walls[i].elements) {
+            walls[i].elements[j] = walls[i].elements[j].rotate(rot, $V([20,20]));
+        }
+    }
+    for (var i in regions) {
+        for (var j in regions[i].elements) {
+            regions[i].elements[j] = regions[i].elements[j].rotate(rot, $V([20,20]));
+        }
+    }
+
+    repeat_draw();
 })

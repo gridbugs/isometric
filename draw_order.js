@@ -38,7 +38,7 @@ DrawOrder.arrange = function(walls, away) {
                     var intersection = proj.intersectionWith(walls[j].extended);
                     if (intersection == null) {continue}
 
-                    if (walls[j].contains_colinear(intersection) &&
+                    if (walls[j].contains_colinear_exc(intersection) &&
                         intersection.subtract(proj.anchor).dot(away) > 0) {
                         
                         found = false;
@@ -61,7 +61,7 @@ DrawOrder.arrange = function(walls, away) {
                     var proj = walls[j].proj[k];
                     var intersection = proj.intersectionWith(walls[i].extended);
                     if (intersection == null) {continue}
-                    if (walls[i].contains_colinear(intersection) &&
+                    if (walls[i].contains_colinear_exc(intersection) &&
                         intersection.subtract(proj.anchor).dot(away) < 0) {
 
                         found = false;
