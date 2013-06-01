@@ -19,7 +19,7 @@ DrawOrder.arrange = function(walls, away) {
          * be proven that once this loop terminates, all
          * the walls have been put in order
          */
-        
+
 
 
         var to_add = null;
@@ -29,7 +29,7 @@ DrawOrder.arrange = function(walls, away) {
              */
             var found = true;
             for (var j in walls) {if (!walls[j].added && i!=j) {
-                /* if one of walls[i]'s away-projections inctercects 
+                /* if one of walls[i]'s away-projections inctercects
                  * with wall[j]
                  */
                 for (var k in [0,1]) {
@@ -40,19 +40,19 @@ DrawOrder.arrange = function(walls, away) {
 
                     if (walls[j].contains_colinear_exc(intersection) &&
                         intersection.subtract(proj.anchor).dot(away) > 0) {
-                        
+
                         found = false;
                         break;
                     }
                 }
-                
+
                 if (!found) {break}
             }}
 
             if (!found) {continue}
 
             /* if we get here, found is still true */
-        
+
             /* now look for walls whose towards-camera projetions
              * intersect with walls[i]
              */
@@ -71,14 +71,14 @@ DrawOrder.arrange = function(walls, away) {
 
                 if (!found) {break}
             }}
-            
+
             if (found) {
                 to_add = walls[i];
                 walls[i].added = true;
                 break;
             }
         }}
-        
+
         if (to_add == null) {console.debug("ERROR")}
 
         order.push(to_add);
