@@ -1,4 +1,9 @@
 function DrawOrder() {}
+
+/*
+ * This determines an order in which a collection of walls may be drawn
+ * such that 
+ */
 DrawOrder.arrange = function(walls, away) {
     /* initial setup:
      * set each wall to be not added

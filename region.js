@@ -1,3 +1,13 @@
+/*
+ * A convex polygon that can contain walls and sub-regions
+ *
+ * elements: an array of points that define the region's boundary
+ * height: the vertical offset of the region (relative to its parent
+ * region or 0 if it's the root)
+ * walls: an array of walls that exist in this region
+ * regions: an array of subregions that exist in this region
+ * visible: (optional) whether the border of this region should be drawn
+ */
 function Region(){}
 Region.create = function(elements, height, walls, regions, visible) {
     var r = new Region();
@@ -10,6 +20,13 @@ Region.create = function(elements, height, walls, regions, visible) {
     } else {
         r.visible = visible;
     }
+
+    /*
+     * This is an array of walls representing regions. For each sub-region
+     * of this region, there is a virtual wall which goes from the left-most
+     * point on its boundary to the right-most point. These virtual walls
+     * are used for finding the draw order.
+     */
     r.virtual_walls = [];
 
     for (var i in r.walls) {
@@ -17,8 +34,11 @@ Region.create = function(elements, height, walls, regions, visible) {
     }
     return r;
 }
+
+// A short name for creating regions
 $R = Region.create;
 
+// Rotates the region and everything it contains about a point
 Region.prototype.rotate = function(angle, centre) {
     for (var i in this.elements) {
         this.elements[i] = this.elements[i].rotate(angle, centre);
@@ -31,8 +51,13 @@ Region.prototype.rotate = function(angle, centre) {
     }
 }
 
+/*
+ * Returns a new (virtual) wall object spanning from the left-most
+ * point of the region to the right-most point.
+ *
+ * left_to_right: a vector defining the direction from left to right
+ */
 Region.prototype.generate_cross_wall = function(left_to_right) {
-
 
     var left_most = this.elements[0];
     var right_most = this.elements[0];
@@ -73,18 +98,49 @@ Region.prototype.generate_virtual_walls = function(left_to_right) {
     }
 }
 
+/*
+ * Creates a static draw order for this region. The array will be stored
+ * as a field of the region, and is also returned by this function
+ * for convenience.
+ *
+ * away: a vector defining the direction away from the eye
+ * left_to_right: a vector defining the right direction
+ */
 Region.prototype.generate_draw_order = function(away, left_to_right) {
+
+    if (away == undefined) {
+        away = $V([0, -1]);
+    }
+    if (left_to_right == undefined) {
+        left_to_right = $V([1, 0]);
+    }
+
+    // generate the virtual walls for each sub-region
     this.generate_virtual_walls(left_to_right);
+
     var all_walls = this.walls.concat(this.virtual_walls);
+
+    // sort all the walls and direct sub-regions into their draw order
     this.draw_order = DrawOrder.arrange(all_walls, away);
+
+    /*
+     * Put this region at the start of the draw order. It's drawn first
+     * as any wall in the region must be drawn on top.
+     */
     this.draw_order.unshift(this);
 
+    /*
+     * Find each virtual wall in the draw order, and replace them with an array
+     * containing the draw order of the associated sub-region.
+     */
     for (var i in this.draw_order) {
         if (this.draw_order[i].is_virtual) {
+            // this.draw_order[i].region is the associated subregion of the virtual wall
             this.draw_order.splice(i, 1, this.draw_order[i].region.generate_draw_order(away, left_to_right));
         }
     }
 
+    // since we replace virtual walls with arrays, the array now needs to be flattened
     this.draw_order = flatten(this.draw_order);
     return this.draw_order;
 }

@@ -41,7 +41,7 @@ $(function(){
         drawer.canvas.width = window.innerWidth;
         drawer.canvas.height = window.innerHeight;
 
-        draw();
     }
+    draw();
 
 })
