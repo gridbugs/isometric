@@ -1,4 +1,4 @@
-$(function(){
+$(ImageLoader.load_async(["marine_sprite.png"], function(images){
 
     var drawer = new IsometricDrawer('screen', $V([15,0]), $V([0,5]), $V([100,150]));
 
@@ -30,10 +30,8 @@ $(function(){
         world.rotate(Math.PI/128, $V([25, 25]));
 
         var order = world.generate_draw_order($V([0, -1]), $V([1, 0]));
-        for (var i in order) {
-            order[i].draw();
-        }
-        
+        order.map(function(x){x.draw()});
+        drawer.ctx.drawImage(images[0], 10, 10);
         setTimeout(draw, 40);
     }
 
@@ -42,6 +40,8 @@ $(function(){
         drawer.canvas.height = window.innerHeight;
 
     }
+    drawer.canvas.width = window.innerWidth;
+    drawer.canvas.height = window.innerHeight;
     draw();
 
-})
+}))
