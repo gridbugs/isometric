@@ -1,38 +1,48 @@
 $(ImageLoader.load_async(["marine_sprite.png"], function(images){
 
-    var drawer = new IsometricDrawer('screen', $V([15,0]), $V([0,5]), $V([100,150]));
+    var drawer = new IsometricDrawer('screen', $V([15,0]), $V([0,5]), $V([100, 80]));
 
     var ht = 45;
     var size1 = 50;
     var size2 = 20;
-    var world = $R([$V([0, 0]), $V([0, 200]), $V([200, 200]), $V([200, 0])], 0,
+    var world = 
+    $R([ 
+        [0, 0], 
+        [0, 40], 
+        [40, 40], 
+        [40, 0] 
+    ], 0,
+    [], 
     [
-        $W([$V([0, 0]), $V([0, size1])], ht),
-        $W([$V([0, size1]), $V([size1, size1])], ht),
-        $W([$V([size1, size1]), $V([size1, 0])], ht),
-        $W([$V([size1, 0]), $V([0, 0])], ht)
-    ], [
-        $R([$V([0,0]), $V([0,size1]), $V([size1, size1]), $V([size1, 0])], ht,
-        [
-            $W([$V([0, 0]), $V([0, size2])], ht),
-            $W([$V([0, size2]), $V([size2, size2])], ht),
-            $W([$V([size2, size2]), $V([size2, 0])], ht),
-            $W([$V([size2, 0]), $V([0, 0])], ht)
-        ],[]
-        )
-    ]);
+        $R([
+            [10, 10],
+            [20, 10],
+            [20, 20],
+            [10, 20]
+        ], 0, [], [], true),
 
+        $R([
+            [20, 10],
+            [30, 10],
+            [30, 20],
+            [20, 20]
+        ], 0, [], [], true)
 
+    ],
+    true);
+
+    world.rotate(Math.PI/6, $V([25, 25]));
+    var order = world.generate_draw_order($V([0, -1]), $V([1, 0]));
+    
+    console.debug(order);
 
     function draw() {
         drawer.clear();
 
-        world.rotate(Math.PI/128, $V([25, 25]));
 
-        var order = world.generate_draw_order($V([0, -1]), $V([1, 0]));
         order.map(function(x){x.draw()});
-        drawer.ctx.drawImage(images[0], 10, 10);
-        setTimeout(draw, 40);
+      //  drawer.ctx.drawImage(images[0], 10, 10);
+      //  setTimeout(draw, 40);
     }
 
     window.onresize = window.onload = function() {

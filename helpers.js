@@ -1,3 +1,5 @@
+const BIG_INTEGER = 100000000;
+
 function flatten(arr) {
     var flat = [];
     for (i in arr) {
@@ -20,4 +22,45 @@ function zip(xs, ys) {
 
 function zip_with(fn, xs, ys) {
     return zip(xs, ys).map(function(x){return fn(x._1, x._2)});
+}
+
+// Returns val if pred(val) is true, otherwise null
+function check(val, pred) {
+    if (pred(val)) {
+        return val;
+    } else {
+        return null;
+    }
+}
+
+/*
+ * Takes a point array representation of a polygon ad returns a line segment 
+ * array of the polyon
+ */
+function polygon_ls(polygon) {
+    return polygon.map(function(pt, i, arr) {
+        return $LS(pt, arr[(i+1)%arr.length]);
+    });
+}
+
+// Returns true iff v is inside the polygon, specified as an array of points
+function in_polygon(polygon, v) {
+
+    // converts polygon into a list pf points
+    var ls_arr = polygon_ls(polygon);
+
+    var up = $LS(v, $V([v.elements[0], BIG_INTEGER]));
+    var count = 0;
+
+    // a loop is used here rather than a map to allow for early exit
+    for (var i in ls_arr) {
+        if (ls_arr[i].intersection_inc(up) != null) {
+            count++;
+            if (count == 2) {
+                return false;
+            }
+        }
+    }
+
+    return count == 1;
 }

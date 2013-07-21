@@ -9,9 +9,13 @@
  * visible: (optional) whether the border of this region should be drawn
  */
 function Region(){}
+
+// This will contain each shared edge
+Region.shared_edges = [];
+
 Region.create = function(elements, height, walls, regions, visible) {
     var r = new Region();
-    r.elements = elements;
+    r.elements = elements.map($V);
     r.walls = walls;
     r.regions = regions;
     r.height = height;
@@ -32,11 +36,26 @@ Region.create = function(elements, height, walls, regions, visible) {
     for (var i in r.walls) {
         r.walls[i].base = height;
     }
+
     return r;
 }
 
 // A short name for creating regions
 $R = Region.create;
+
+// Declares an edge as shared between two regions
+Region.share_edge = function(r1, r2, ls) {
+    // TODO: sanity checking the edge
+    Region.shared_edges.push({
+        regions: [r1, r2],
+        line_segment: ls
+    });
+}
+
+// returns true iff a point is inside the region
+Region.prototype.contains_point = function(v) {
+    return in_polygon(this.elements, v);
+}
 
 // Rotates the region and everything it contains about a point
 Region.prototype.rotate = function(angle, centre) {
@@ -94,7 +113,7 @@ Region.prototype.generate_cross_wall = function(left_to_right) {
 Region.prototype.generate_virtual_walls = function(left_to_right) {
     this.virtual_walls = [];
     for (var i in this.regions) {
-        this.virtual_walls = this.regions[i].generate_cross_wall(left_to_right);
+        this.virtual_walls.push(this.regions[i].generate_cross_wall(left_to_right));
     }
 }
 
@@ -119,6 +138,9 @@ Region.prototype.generate_draw_order = function(away, left_to_right) {
     this.generate_virtual_walls(left_to_right);
 
     var all_walls = this.walls.concat(this.virtual_walls);
+
+    console.debug("all_walls");
+    console.debug(this.virtual_walls);
 
     // sort all the walls and direct sub-regions into their draw order
     this.draw_order = DrawOrder.arrange(all_walls, away);
