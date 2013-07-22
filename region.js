@@ -30,6 +30,8 @@ Region.create = function(elements, height, walls, regions, visible, characters) 
      */
     r.virtual_walls = [];
 
+    r.sprite_segments = [];
+
     for (var i in r.walls) {
         r.walls[i].base = height;
     }
@@ -138,9 +140,6 @@ Region.prototype.generate_draw_order = function(away, left_to_right) {
     this.generate_virtual_walls(left_to_right);
 
     var all_walls = this.walls.concat(this.virtual_walls);
-
-    console.debug("all_walls");
-    console.debug(this.virtual_walls);
 
     // sort all the walls and direct sub-regions into their draw order
     this.draw_order = DrawOrder.arrange(all_walls, away);

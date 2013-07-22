@@ -43,7 +43,7 @@ function default_value(value, def) {
  */
 function polygon_ls(polygon) {
     return polygon.map(function(pt, i, arr) {
-        return $LS(pt, arr[(i+1)%arr.length]);
+        return $LS([pt, arr[(i+1)%arr.length]]);
     });
 }
 
@@ -52,12 +52,13 @@ function in_polygon(polygon, v) {
 
     // converts polygon into a list pf points
     var ls_arr = polygon_ls(polygon);
-
-    var up = $LS(v, $V([v.elements[0], BIG_INTEGER]));
+    var up = $LS([v, $V([v.elements[0], BIG_INTEGER, 0])]);
     var count = 0;
 
     // a loop is used here rather than a map to allow for early exit
     for (var i in ls_arr) {
+        ls_arr[i].elements[0].elements[2] = 0;
+        ls_arr[i].elements[1].elements[2] = 0;
         if (ls_arr[i].intersection_inc(up) != null) {
             count++;
             if (count == 2) {
@@ -71,4 +72,14 @@ function in_polygon(polygon, v) {
 
 function draw_arr(arr) {
     arr.map(function(x){x.draw()});
+}
+
+function filter(arr, pred) {
+    var ret = [];
+    for (var i in arr) {
+        if (pred(arr[i])) {
+            ret.push(arr[i]);
+        }
+    }
+    return ret;
 }

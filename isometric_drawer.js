@@ -7,8 +7,11 @@ function IsometricDrawer(name, x_proj, y_proj, origin) {
     this.x_proj = x_proj;
     this.y_proj = y_proj;
     this.origin = origin;
-    this.sprite_scale = 1;
-    
+
+    var x_len = x_proj.modulus();
+    var y_len = y_proj.modulus();
+    this.horizontal_unit = Math.sqrt(x_len*x_len+y_len*y_len);
+
     this.ctx.moveToV = function(v) {
         return this.moveTo(v.elements[0], v.elements[1]);
     }
@@ -62,17 +65,20 @@ function IsometricDrawer(name, x_proj, y_proj, origin) {
     }
 
     Character.prototype.draw = function() {
-        var converted =  drawer.convert(this.position);
-        c_elements = [converted.add($V([this.radius*drawer.sprite_scale, 0])), 
-                      converted.subtract($V([this.radius*drawer.sprite_scale, 0]))];
-        console.debug(drawer.sprite_scale);
+        var base = this.base();
+        var c_elements = [drawer.convert(base.elements[0]),
+                          drawer.convert(base.elements[1])];
 
         drawer.ctx.strokeStyle = "red";
-        drawer.ctx.lineWidth = 5;
+        drawer.ctx.lineWidth = 2;
         drawer.ctx.beginPath();
         drawer.ctx.moveToV(c_elements[0]);
         drawer.ctx.lineToV(c_elements[1]);
         drawer.ctx.stroke();
+    }
+
+    SpriteSegment.prototype.draw = function() {
+        
     }
 }
 
