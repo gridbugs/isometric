@@ -33,6 +33,10 @@ function check(val, pred) {
     }
 }
 
+function default_value(value, def) {
+    return value == undefined ? def : value;
+}
+
 /*
  * Takes a point array representation of a polygon ad returns a line segment 
  * array of the polyon
@@ -63,4 +67,8 @@ function in_polygon(polygon, v) {
     }
 
     return count == 1;
+}
+
+function draw_arr(arr) {
+    arr.map(function(x){x.draw()});
 }

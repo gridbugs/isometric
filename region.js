@@ -13,17 +13,14 @@ function Region(){}
 // This will contain each shared edge
 Region.shared_edges = [];
 
-Region.create = function(elements, height, walls, regions, visible) {
+Region.create = function(elements, height, walls, regions, visible, characters) {
     var r = new Region();
     r.elements = elements.map($V);
     r.walls = walls;
     r.regions = regions;
     r.height = height;
-    if (visible == undefined) {
-        r.visible = false;
-    } else {
-        r.visible = visible;
-    }
+    r.characters = default_value(characters, []);
+    r.visible = default_value(visible, false);
 
     /*
      * This is an array of walls representing regions. For each sub-region
@@ -67,6 +64,9 @@ Region.prototype.rotate = function(angle, centre) {
     }
     for (var i in this.regions) {
         this.regions[i].rotate(angle, centre);
+    }
+    for (var i in this.characters) {
+        this.characters[i].rotate(angle, centre);
     }
 }
 

@@ -15,21 +15,24 @@ $(ImageLoader.load_async(["marine_sprite.png"], function(images){
     [], 
     [
         $R([
-            [10, 10],
-            [20, 10],
+            [0, 0],
+            [20, 0],
             [20, 20],
-            [10, 20]
+            [0, 20]
         ], 0, [], [], true),
 
         $R([
-            [20, 10],
-            [30, 10],
-            [30, 20],
+            [20, 0],
+            [40, 0],
+            [40, 20],
             [20, 20]
         ], 0, [], [], true)
 
     ],
-    true);
+    false,
+    [
+        $CH($V([20, 10]), 32)
+    ]);
 
     world.rotate(Math.PI/6, $V([25, 25]));
     var order = world.generate_draw_order($V([0, -1]), $V([1, 0]));
@@ -39,8 +42,8 @@ $(ImageLoader.load_async(["marine_sprite.png"], function(images){
     function draw() {
         drawer.clear();
 
-
-        order.map(function(x){x.draw()});
+        draw_arr(order);
+        draw_arr(world.characters);
       //  drawer.ctx.drawImage(images[0], 10, 10);
       //  setTimeout(draw, 40);
     }
