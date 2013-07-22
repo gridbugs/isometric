@@ -62,6 +62,9 @@ function IsometricDrawer(name, x_proj, y_proj, origin) {
             drawer.ctx.fill();
             drawer.ctx.stroke();
         }
+        for (var i in this.sprite_segments) {
+            this.sprite_segments[i].draw();
+        }
     }
 
     Character.prototype.draw = function() {
@@ -78,7 +81,23 @@ function IsometricDrawer(name, x_proj, y_proj, origin) {
     }
 
     SpriteSegment.prototype.draw = function() {
-        
+        console.debug(this.position);
+        var c_position = drawer.convert(this.position);
+        var top_left = c_position.subtract($V([this.image.width/2 - this.start * this.image.width, this.image.height]));
+        console.debug(top_left);
+        drawer.ctx.drawImage(
+            // image to draw
+            this.image,
+            // offset into the original image to start drawing
+            this.image.width * this.start, 0,
+            // amount of original image to draw
+            this.width, this.image.height,
+            // offset on the canvas to start drawing
+            top_left.elements[0], top_left.elements[1],
+            // actual size of drawn image on canvas
+            this.width, this.image.height
+        );
+
     }
 }
 

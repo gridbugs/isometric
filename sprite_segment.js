@@ -3,8 +3,8 @@ function SpriteSegment(image, position, start, end){
     this.position = position;
     this.start = start;
     this.end = end;
-
-    this.top_left = position.subtract($V([image.width/2, image.height]));
+    this.amount = end - start;
+    this.width = this.amount * this.image.width;
 }
 SpriteSegment.create = function(image, position, start, end) {
     return new SpriteSegment(image, position, start, end);
