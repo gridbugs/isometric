@@ -52,11 +52,15 @@ function in_polygon(polygon, v) {
 
     // converts polygon into a list pf points
     var ls_arr = polygon_ls(polygon);
-    var up = $LS([v, $V([v.elements[0], BIG_INTEGER, 0])]);
+    var up = $LS([v, $V([v.elements[0], -BIG_INTEGER, 0])]);
     var count = 0;
+    if (v.elements.length == 3) {
+        v.elements = v.elements.slice(0, 2);
+    }
 
     // a loop is used here rather than a map to allow for early exit
     for (var i in ls_arr) {
+        
         ls_arr[i].elements[0].elements[2] = 0;
         ls_arr[i].elements[1].elements[2] = 0;
         if (ls_arr[i].intersection_inc(up) != null) {

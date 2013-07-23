@@ -42,6 +42,11 @@ Region.create = function(elements, height, walls, regions, visible, characters) 
 // A short name for creating regions
 $R = Region.create;
 
+Region.prototype.flush_sprites = function() {
+    this.sprite_segments = [];
+    this.regions.map(function(r){r.flush_sprites()});
+}
+
 // Declares an edge as shared between two regions
 Region.share_edge = function(r1, r2, ls) {
     // TODO: sanity checking the edge
@@ -59,6 +64,7 @@ Region.prototype.contains_point = function(v) {
 // Rotates the region and everything it contains about a point
 Region.prototype.rotate = function(angle, centre) {
     for (var i in this.elements) {
+        this.elements[i].elements = this.elements[i].elements.slice(0, 2);
         this.elements[i] = this.elements[i].rotate(angle, centre);
     }
     for (var i in this.walls) {

@@ -5,9 +5,26 @@ Character.create = function(initial_pos, width, sprite) {
     ch.width = width;
     ch.radius = width/2;
     ch.sprite = sprite;
+    ch.potential_regions = [];
+    ch.current_region = ch.find_current_region();
     return ch;
 }
 $CH = Character.create;
+
+Character.prototype.find_current_region = function() {
+    console.debug(this.position);
+    console.debug("finding region");
+    for (var i in this.potential_regions) {
+        this.position.elements = this.position.elements.slice(0, 2);
+        if (in_polygon(this.potential_regions[i].elements, this.position)) {
+            return this.potential_regions[i];
+        }
+    }
+    console.debug("not in region");
+    console.debug(this.position);
+    console.debug(this.potential_regions);
+    return null;
+}
 
 Character.prototype.base = function() {
     return $LS([[this.position.elements[0] - this.radius, this.position.elements[1]],
@@ -29,7 +46,8 @@ Character.prototype.locate_self = function() {
     // find all the intersection points
     var base_breaks =
     filter(Region.shared_edges.map(function(sh) {
-        return base.intersection_exc(sh.line_segment);//
+        var ret = base.intersection_exc(sh.line_segment);
+        return ret;
     }), function(x){return x != null})
     .map(function(pt, i) {
         // how far along the base is the intersection
@@ -52,6 +70,17 @@ Character.prototype.locate_self = function() {
 
         return {along: along, lhs_region: lhs_region, rhs_region: rhs_region};
     });
+
+    if (base_breaks.length == 0) {
+        if (this.current_region == null) {
+            this.current_region = this.find_current_region();
+        }
+        this.current_region.sprite_segments.push(
+            $SS(this.sprite, this.position, 0, 1));
+        return;
+    }
+
+    this.current_region = null;
 
     // order by how far along the base the point is
     base_breaks = base_breaks.sort(function(x, y){return x.along > y.along});
@@ -79,9 +108,11 @@ Character.prototype.locate_self = function() {
             $SS(this.sprite, this.position, segments[i].left, segments[i].right));
     }
 
-    console.debug(segments);
 }
 
 Character.prototype.rotate = function(angle, centre) {
+    if (this.position.elements.length == 3) {
+        this.position.elements = this.position.elements.splice(0, 2);
+    }
     this.position = this.position.rotate(angle, centre);
 }

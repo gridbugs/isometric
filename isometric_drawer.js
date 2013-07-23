@@ -81,10 +81,11 @@ function IsometricDrawer(name, x_proj, y_proj, origin) {
     }
 
     SpriteSegment.prototype.draw = function() {
-        console.debug(this.position);
         var c_position = drawer.convert(this.position);
         var top_left = c_position.subtract($V([this.image.width/2 - this.start * this.image.width, this.image.height]));
-        console.debug(top_left);
+        if (this.end == 1) {
+            this.width -= 0.001;
+        }
         drawer.ctx.drawImage(
             // image to draw
             this.image,
@@ -97,7 +98,11 @@ function IsometricDrawer(name, x_proj, y_proj, origin) {
             // actual size of drawn image on canvas
             this.width, this.image.height
         );
-
+        
+        drawer.ctx.strokeStyle = "blue";
+        drawer.ctx.beginPath();
+        drawer.ctx.strokeRect(top_left.elements[0], top_left.elements[1], this.width, this.image.height);
+        drawer.ctx.stroke();
     }
 }
 

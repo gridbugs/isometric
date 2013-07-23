@@ -18,6 +18,20 @@ LineSegment.prototype.get_extended = function() {
  * of the line segment.
  */
 LineSegment.prototype.contains_colinear_inc = function(v) {
+
+    // horizontal line edge case
+    if (this.elements[0].elements[1] == this.elements[1].elements[1]) {
+        return (this.elements[0].elements[0] <= v.elements[0] && v.elements[0] <= this.elements[1].elements[0]) ||
+               (this.elements[1].elements[0] <= v.elements[0] && v.elements[0] <= this.elements[0].elements[0]);
+    }
+
+    // vertical line edge case
+    if (this.elements[0].elements[0] == this.elements[1].elements[0]) {
+        return (this.elements[0].elements[1] <= v.elements[1] && v.elements[1] <= this.elements[1].elements[1]) ||
+               (this.elements[1].elements[1] <= v.elements[1] && v.elements[1] <= this.elements[0].elements[1]);
+    }
+
+
     return ((this.elements[0].elements[0] <= v.elements[0] && v.elements[0] <= this.elements[1].elements[0]) ||
            (this.elements[1].elements[0] <= v.elements[0] && v.elements[0] <= this.elements[0].elements[0])) &&
            ((this.elements[0].elements[1] <= v.elements[1] && v.elements[1] <= this.elements[1].elements[1]) ||
@@ -75,6 +89,10 @@ LineSegment.prototype.intersection_exc = function(other) {
 }
 
 LineSegment.prototype.rotate = function(angle, centre) {
+    if (this.elements[0].elements.length == 3) {
+        this.elements[0].elements = this.elements[0].elements.slice(0, 2);
+        this.elements[1].elements = this.elements[1].elements.slice(0, 2);
+    }
     this.elements[0] = this.elements[0].rotate(angle, centre);
     this.elements[1] = this.elements[1].rotate(angle, centre);
 }
