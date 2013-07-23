@@ -56,24 +56,30 @@ $(ImageLoader.load_async(["marine_sprite.png"], function(images){
     world.regions[1].id = "b";
     world.regions[2].id = "c";
 
-    var control = new Control(ch, 0.2, 10, $V([-1, 0]), $V([1, 0]), $V([0, -1]), $V([0, 1]));
+    var control = new Control(ch, 0.5, 10, $V([-1, 0]), $V([1, 0]), $V([0, -1]), $V([0, 1]));
     control.bind_keys();
 
-    var angle = -Math.PI/6;
+    var angle = 2*Math.PI/3;
     world.rotate(angle, $V([25, 25]));
     e1.rotate(angle, $V([25, 25]));
     e2.rotate(angle, $V([25, 25]));
 
-    function draw() {
-    control.tick();
-    world.flush_sprites();
+    var tick_angle = Math.PI/180;
 
-    ch.locate_self();
+    function draw() {/*
+        world.rotate(tick_angle, $V([25, 25]));
+        e1.rotate(tick_angle, $V([25, 25]));
+        e2.rotate(tick_angle, $V([25, 25]));
+*/
+        control.tick();
+        world.flush_sprites();
+
+        ch.locate_self();
         drawer.clear();
         var order = world.generate_draw_order($V([0, -1]), $V([1, 0]));
         draw_arr(order);
         draw_arr(world.characters);
-        setTimeout(draw, 20);
+        setTimeout(draw, 33);
     }
 
     window.onresize = window.onload = function() {

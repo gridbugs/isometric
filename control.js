@@ -1,20 +1,35 @@
-const LEFT=37;
-const RIGHT=39;
-const UP=38;
-const DOWN=40;
+const KEY_LEFT=37;
+const KEY_RIGHT=39;
+const KEY_UP=38;
+const KEY_DOWN=40;
+
+const KEY_W=87;
+const KEY_A=65;
+const KEY_S=83;
+const KEY_D=84;
+const KEY_COMMA=188;
+const KEY_O=79;
+const KEY_E=69;
 
 function Control(character, acc, max_speed, left, right, up, down){
     this.keys_down = [];
-    this.keys_down[LEFT] = false;
-    this.keys_down[RIGHT] = false;
-    this.keys_down[UP] = false;
-    this.keys_down[DOWN] = false;
+    for (var i = 0;i!=200;++i) {
+        this.keys_down[i] = false;
+    }
 
     this.directions = [];
-    this.directions[LEFT] = left;
-    this.directions[RIGHT] = right;
-    this.directions[UP] = up;
-    this.directions[DOWN] = down;
+    this.directions[KEY_LEFT] = left;
+    this.directions[KEY_RIGHT] = right;
+    this.directions[KEY_UP] = up;
+    this.directions[KEY_DOWN] = down;
+    
+    this.directions[KEY_W] = up;
+    this.directions[KEY_A] = left;
+    this.directions[KEY_S] = down;
+    this.directions[KEY_D] = right;
+    this.directions[KEY_COMMA] = up;
+    this.directions[KEY_O] = down;
+    this.directions[KEY_E] = right;
 
     this.movement = new Movement();
     this.character = character;
@@ -23,6 +38,7 @@ function Control(character, acc, max_speed, left, right, up, down){
 }
 
 Control.prototype.key_down = function(code) {
+    console.debug(code);
     this.keys_down[code] = true;
 }
 Control.prototype.key_up = function(code) {
