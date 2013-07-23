@@ -49,8 +49,11 @@ $(ImageLoader.load_async(["marine_sprite.png"], function(images){
     Region.share_edge(world.regions[1], world.regions[2], e1);
     Region.share_edge(world.regions[0], world.regions[1], e2);
 
+    var control = new Control(ch, 0.2, 10, $V([-1, 0]), $V([1, 0]), $V([0, -1]), $V([0, 1]));
+    control.bind_keys();
 
     function draw() {
+    control.tick();
     world.rotate(Math.PI/180, $V([25, 25]));
     e1.rotate(Math.PI/180, $V([25, 25]));
     e2.rotate(Math.PI/180, $V([25, 25]));

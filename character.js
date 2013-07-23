@@ -12,17 +12,12 @@ Character.create = function(initial_pos, width, sprite) {
 $CH = Character.create;
 
 Character.prototype.find_current_region = function() {
-    console.debug(this.position);
-    console.debug("finding region");
     for (var i in this.potential_regions) {
         this.position.elements = this.position.elements.slice(0, 2);
         if (in_polygon(this.potential_regions[i].elements, this.position)) {
             return this.potential_regions[i];
         }
     }
-    console.debug("not in region");
-    console.debug(this.position);
-    console.debug(this.potential_regions);
     return null;
 }
 

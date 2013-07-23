@@ -9,6 +9,10 @@ Vector.prototype.dot = function(v) {
     return sum;
 }
 
+Vector.prototype.to2d = function() {
+    return $V(this.elements.slice(0, 2));
+}
+
 Vector.prototype.projectOn = function(v) {
   return v.multiply(this.dot(v)/v.dot(v));
 };
