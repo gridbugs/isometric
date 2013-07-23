@@ -51,6 +51,6 @@ Control.prototype.velocity_change = function(speed) {
 
 Control.prototype.tick = function() {
     this.movement.change(this.velocity_change(this.acc), this.max_speed);
-    this.movement.decay(0.9, 0.1);
+    this.movement.decay(0.7, 0.1);
     this.character.position = this.character.position.to2d().add(this.movement.velocity.to2d());
 }

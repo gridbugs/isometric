@@ -2,7 +2,7 @@ var drawer;
 var world;
 $(ImageLoader.load_async(["marine_sprite.png"], function(images){
     drawer = new IsometricDrawer('screen', $V([15,0]), $V([0,5]), $V([100, 80]));
-    var ch = $CH($V([19.5, 10]), images[0].width / drawer.horizontal_unit, images[0]);
+    var ch = $CH($V([10, 10]), images[0].width / drawer.horizontal_unit, images[0]);
     var ht = 45;
     var size1 = 50;
     var size2 = 20;
@@ -49,14 +49,23 @@ $(ImageLoader.load_async(["marine_sprite.png"], function(images){
     Region.share_edge(world.regions[1], world.regions[2], e1);
     Region.share_edge(world.regions[0], world.regions[1], e2);
 
+    Region.shared_edges[0].id="a";
+    Region.shared_edges[1].id="b";
+
+    world.regions[0].id = "a";
+    world.regions[1].id = "b";
+    world.regions[2].id = "c";
+
     var control = new Control(ch, 0.2, 10, $V([-1, 0]), $V([1, 0]), $V([0, -1]), $V([0, 1]));
     control.bind_keys();
 
+    var angle = -Math.PI/6;
+    world.rotate(angle, $V([25, 25]));
+    e1.rotate(angle, $V([25, 25]));
+    e2.rotate(angle, $V([25, 25]));
+
     function draw() {
     control.tick();
-    world.rotate(Math.PI/180, $V([25, 25]));
-    e1.rotate(Math.PI/180, $V([25, 25]));
-    e2.rotate(Math.PI/180, $V([25, 25]));
     world.flush_sprites();
 
     ch.locate_self();

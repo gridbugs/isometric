@@ -42,25 +42,27 @@ Character.prototype.locate_self = function() {
     var base_breaks =
     filter(Region.shared_edges.map(function(sh) {
         var ret = base.intersection_exc(sh.line_segment);
-        return ret;
-    }), function(x){return x != null})
-    .map(function(pt, i) {
+        return {pt: ret, edge: sh};
+    }), function(x){return x.pt != null})
+    .map(function(ict, i) {
+        var pt = ict.pt;
+        var edge = ict.edge;
         // how far along the base is the intersection
         var along = pt.subtract(base.elements[0]).modulus() / ch.width;
 
         // find a point slightly towards the start of the base
-        var just_before = base.elements[0].add(base_v.multiply(along - 0.01));
+        var just_before = base.elements[0].add(base_v.multiply(along - 0.1));
         /*
-         * just_before lies in either Region.shared_edges[i].regions[0] or regions[1]
+         * just_before lies in either edge.regions[0] or regions[1]
          * Here, we determine which it is.
          */
         var lhs_region, rhs_region;
-        if (in_polygon(Region.shared_edges[i].regions[0].elements, just_before)) {
-            lhs_region = Region.shared_edges[i].regions[0];
-            rhs_region = Region.shared_edges[i].regions[1];
+        if (in_polygon(edge.regions[0].elements, just_before)) {
+            lhs_region = edge.regions[0];
+            rhs_region = edge.regions[1];
         } else {
-            lhs_region = Region.shared_edges[i].regions[1];
-            rhs_region = Region.shared_edges[i].regions[0];
+            lhs_region = edge.regions[1];
+            rhs_region = edge.regions[0];
         }
 
         return {along: along, lhs_region: lhs_region, rhs_region: rhs_region};
@@ -74,12 +76,10 @@ Character.prototype.locate_self = function() {
             $SS(this.sprite, this.position, 0, 1));
         return;
     }
-
     this.current_region = null;
 
     // order by how far along the base the point is
     base_breaks = base_breaks.sort(function(x, y){return x.along > y.along});
-
     /*
      * create an array of segments - these represent parts of the base,
      * each existing in a separate region
