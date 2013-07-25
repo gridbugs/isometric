@@ -76,6 +76,9 @@ Region.prototype.rotate = function(angle, centre) {
     for (var i in this.characters) {
         this.characters[i].rotate(angle, centre);
     }
+//    for (var i in Region.shared_edges) {
+//        Region.shared_edges[i].line_segment.rotate(angle, centre);
+//    }
 }
 
 /*

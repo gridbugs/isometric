@@ -38,7 +38,6 @@ function Control(character, acc, max_speed, left, right, up, down){
 }
 
 Control.prototype.key_down = function(code) {
-    console.debug(code);
     this.keys_down[code] = true;
 }
 Control.prototype.key_up = function(code) {

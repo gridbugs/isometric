@@ -2,8 +2,8 @@ function Wall() {};
 Wall.prototype = new LineSegment();
 Wall.create = function(pts, ht, base) {
     var w = new Wall();
-    w.setVectors(pts);
-    w.height = ht;
+    w.setVectors(pts.map($V));
+    w.height = default_value(ht, 60);
 
     if (base == undefined) {
         w.base = 0;

@@ -33,6 +33,8 @@ function IsometricDrawer(name, x_proj, y_proj, origin) {
         }
 
         drawer.ctx.fillStyle = "white";
+        drawer.ctx.strokeStyle = "black";
+        drawer.ctx.lineWidth = 2;
         drawer.ctx.beginPath();
         drawer.ctx.moveToV(c_elements[0]);
         drawer.ctx.lineToV(c_elements[1]);
@@ -71,38 +73,41 @@ function IsometricDrawer(name, x_proj, y_proj, origin) {
         var base = this.base();
         var c_elements = [drawer.convert(base.elements[0]),
                           drawer.convert(base.elements[1])];
-
+        /*
         drawer.ctx.strokeStyle = "red";
         drawer.ctx.lineWidth = 2;
         drawer.ctx.beginPath();
         drawer.ctx.moveToV(c_elements[0]);
         drawer.ctx.lineToV(c_elements[1]);
         drawer.ctx.stroke();
+        */
     }
 
     SpriteSegment.prototype.draw = function() {
         var c_position = drawer.convert(this.position);
-        var top_left = c_position.subtract($V([this.image.width/2 - this.start * this.image.width, this.image.height]));
+        var top_left = c_position.subtract($V([this.frame.width/2 - this.start * this.frame.width, this.frame.height]));
         if (this.end == 1) {
             this.width -= 0.001;
         }
         drawer.ctx.drawImage(
             // image to draw
-            this.image,
+            this.frame.image,
             // offset into the original image to start drawing
-            this.image.width * this.start, 0,
+            this.frame.x + this.frame.width * this.start, this.frame.y,
             // amount of original image to draw
-            this.width, this.image.height,
+            this.width, this.frame.height,
             // offset on the canvas to start drawing
             top_left.elements[0], top_left.elements[1],
             // actual size of drawn image on canvas
-            this.width, this.image.height
+            this.width, this.frame.height
         );
         
+        /*
         drawer.ctx.strokeStyle = "blue";
         drawer.ctx.beginPath();
         drawer.ctx.strokeRect(top_left.elements[0], top_left.elements[1], this.width, this.image.height);
         drawer.ctx.stroke();
+        */
     }
 }
 
