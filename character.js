@@ -73,7 +73,7 @@ Character.prototype.locate_self = function() {
             this.current_region = this.find_current_region();
         }
         this.current_region.sprite_segments.push(
-            $SS(this.sprite, this.position, 0, 1));
+            $SS(this.sprite, this.position, 0, 1, this.current_region));
         return;
     }
     this.current_region = null;
@@ -100,7 +100,7 @@ Character.prototype.locate_self = function() {
 
     for (var i in segments) {
         segments[i].region.sprite_segments.push(
-            $SS(this.sprite, this.position, segments[i].left, segments[i].right));
+            $SS(this.sprite, this.position, segments[i].left, segments[i].right, segments[i].region));
     }
 
 }

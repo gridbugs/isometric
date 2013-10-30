@@ -2,7 +2,7 @@ var drawer;
 var world;
 $(ImageLoader.load_async(["marine_sheet.gif"], function(images){
     drawer = new IsometricDrawer('screen', $V([15,0]), $V([0,5]), $V([100, 120]));
-
+    console.debug("hi");
     var s = $SPR(images[0]);
     s.a("walk_side0", [102, 0], [144, 52]);
     s.a("walk_side1", [378, 0], [414, 55]);
@@ -59,28 +59,28 @@ $(ImageLoader.load_async(["marine_sheet.gif"], function(images){
             [20, 0],
             [20, 20],
             [0, 20]
-        ], 0, [], [], false),
+        ], /*height*/50 , [], [], true),
 
         $R([
             [20, 0],
             [40, 0],
             [40, 20],
             [20, 20]
-        ], 0, [], [], false),
+        ], 0, [], [], true),
 
         $R([
             [0, 20],
             [20, 20],
             [20, 40],
             [0, 40]
-        ], 0, [], [], false),
+        ], 0, [], [], true),
 
         $R([
             [20, 20],
             [40, 20],
             [40, 40],
             [20, 40]
-        ], 0, [], [], false)
+        ], 0, [], [], true)
 
 
     ],
@@ -121,7 +121,7 @@ $(ImageLoader.load_async(["marine_sheet.gif"], function(images){
         e2.rotate(tick_angle, $V([25, 25]));
 */
         control.tick();
-        
+
         s.set_fps(control.movement.velocity.modulus()*15);
         if (control.movement.velocity.modulus() == 0) {
             s.current_sequence = "stand";
@@ -132,7 +132,7 @@ $(ImageLoader.load_async(["marine_sheet.gif"], function(images){
         } else {
             s.current_sequence = "walk_side";
         }
-        
+
         world.flush_sprites();
 
         ch.locate_self();

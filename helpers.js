@@ -38,7 +38,7 @@ function default_value(value, def) {
 }
 
 /*
- * Takes a point array representation of a polygon ad returns a line segment 
+ * Takes a point array representation of a polygon ad returns a line segment
  * array of the polyon
  */
 function polygon_ls(polygon) {
@@ -60,7 +60,7 @@ function in_polygon(polygon, v) {
 
     // a loop is used here rather than a map to allow for early exit
     for (var i in ls_arr) {
-        
+
         ls_arr[i].elements[0].elements[2] = 0;
         ls_arr[i].elements[1].elements[2] = 0;
         if (ls_arr[i].intersection_inc(up) != null) {
@@ -86,4 +86,16 @@ function filter(arr, pred) {
         }
     }
     return ret;
+}
+
+function _(x, msg) {
+    msg = default_value(msg, "");
+    console.debug("debug: ", x);
+    if (x == undefined) {
+        console.debug(msg, " (undefined)");
+    }
+    if (x == null) {
+        console.debug(msg, " (null)");
+    }
+    return x;
 }
