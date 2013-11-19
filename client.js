@@ -35,7 +35,7 @@ $(ImageLoader.load_async(["marine_sheet.gif"], function(images){
     var size1 = 50;
     var size2 = 20;
 
-    var centre_height = 20;
+    var centre_height = 80;
     world =
     $R(
     /* list of points around the convex polygon containing the world*/
@@ -137,7 +137,7 @@ $(ImageLoader.load_async(["marine_sheet.gif"], function(images){
             [15, 25],
             [25, 25],
             [25, 15]
-        ], 0, [], [], true)
+        ], centre_height, [], [], true)
 
     ],
 
@@ -237,10 +237,13 @@ $(ImageLoader.load_async(["marine_sheet.gif"], function(images){
 
         draw_arr(order);
         draw_arr(world.characters);
-
+        
+        /*
         for (var i in borders) {
             borders[i].draw();
         }
+        */
+
         setTimeout(draw, 33);
     }
 
