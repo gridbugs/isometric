@@ -27,9 +27,9 @@ ImageLoader.load_async = function(src_array, callback) {
             console.debug("Image load timed out!");
             return;
         }
-        console.log(retries);
+   //     console.log(retries);
         setTimeout(wait, period, retries - 1);
     }
-    console.log("Loading images");
+    //console.log("Loading images");
     wait(100, 100);
 }

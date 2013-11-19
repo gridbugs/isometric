@@ -193,7 +193,6 @@ SlopedRegion.prototype.get_height = function(p, q) {
            this.slope.ycoef * p.elements[1];
 
 
-//   console.debug(this.slope.toString() + " | " + p.elements[0] + ", " + p.elements[1] + ", " + a);
 
     return a;
 }
@@ -280,7 +279,6 @@ SlopedRegion.prototype.rotate = function(angle, centre) {
                 return $V($V(x.elements.slice(0,2)).rotate(angle, centre).elements.concat([x.elements[2]]));
             }
         );
-    print(this.slope_references);
     this.calculate_coefficients();
 }
 

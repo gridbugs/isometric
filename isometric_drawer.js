@@ -21,6 +21,7 @@ function IsometricDrawer(name, x_proj, y_proj, origin) {
 
     var drawer = this;
     LineSegment.prototype.draw = function() {
+        drawer.ctx.strokeStyle = "blue";
         drawer.ctx.beginPath();
         drawer.ctx.moveToV(drawer.convert(this.elements[0]));
         drawer.ctx.lineToV(drawer.convert(this.elements[1]));
@@ -68,9 +69,8 @@ function IsometricDrawer(name, x_proj, y_proj, origin) {
             this.sprite_segments[i].draw();
         }
     }
-    
+
     SlopedRegion.prototype.draw = function() {
-        print(this.elements);
         if (this.visible) {
             var c_elements = [];
             for (var i in this.elements) {
@@ -79,7 +79,7 @@ function IsometricDrawer(name, x_proj, y_proj, origin) {
 
             drawer.ctx.strokeStyle = "black";
             drawer.ctx.lineWidth = 2;
-            drawer.ctx.fillStyle = "blue";
+            drawer.ctx.fillStyle = "white";
             drawer.ctx.beginPath();
             drawer.ctx.moveToV(c_elements[c_elements.length-1].subtract($V([0, this.get_height(this.elements[this.elements.length - 1]) ])));
             for (var i in c_elements) {
@@ -128,13 +128,13 @@ function IsometricDrawer(name, x_proj, y_proj, origin) {
             // actual size of drawn image on canvas
             this.width, this.frame.height
         );
+
         
-        /*
-        drawer.ctx.strokeStyle = "blue";
+        drawer.ctx.strokeStyle = "red";
         drawer.ctx.beginPath();
-        drawer.ctx.strokeRect(top_left.elements[0], top_left.elements[1], this.width, this.image.height);
+        drawer.ctx.strokeRect(top_left.elements[0], top_left.elements[1], this.width, this.frame.height);
         drawer.ctx.stroke();
-        */
+        
     }
 }
 
