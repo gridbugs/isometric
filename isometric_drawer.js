@@ -57,9 +57,9 @@ function IsometricDrawer(name, x_proj, y_proj, origin) {
             drawer.ctx.lineWidth = 2;
             drawer.ctx.fillStyle = "white";
             drawer.ctx.beginPath();
-            drawer.ctx.moveToV(c_elements[c_elements.length-1].subtract($V([0, this.height])));
+            drawer.ctx.moveToV(c_elements[c_elements.length-1].subtract($V([0, this.get_height(this.elements[this.elements.length - 1]) ])));
             for (var i in c_elements) {
-                drawer.ctx.lineToV(c_elements[i].subtract($V([0, this.height])));
+                drawer.ctx.lineToV(c_elements[i].subtract($V([0, this.get_height(this.elements[i])])));
             }
             drawer.ctx.fill();
             drawer.ctx.stroke();
@@ -68,6 +68,33 @@ function IsometricDrawer(name, x_proj, y_proj, origin) {
             this.sprite_segments[i].draw();
         }
     }
+    
+    SlopedRegion.prototype.draw = function() {
+        print(this.elements);
+        if (this.visible) {
+            var c_elements = [];
+            for (var i in this.elements) {
+                c_elements[i] = drawer.convert(this.elements[i]);
+            }
+
+            drawer.ctx.strokeStyle = "black";
+            drawer.ctx.lineWidth = 2;
+            drawer.ctx.fillStyle = "blue";
+            drawer.ctx.beginPath();
+            drawer.ctx.moveToV(c_elements[c_elements.length-1].subtract($V([0, this.get_height(this.elements[this.elements.length - 1]) ])));
+            for (var i in c_elements) {
+                drawer.ctx.lineToV(c_elements[i].subtract($V([0, this.get_height(this.elements[i])])));
+            }
+            drawer.ctx.fill();
+            drawer.ctx.stroke();
+        }
+        for (var i in this.sprite_segments) {
+            this.sprite_segments[i].draw();
+        }
+    }
+
+
+
 
     Character.prototype.draw = function() {
         var base = this.base();
@@ -97,7 +124,7 @@ function IsometricDrawer(name, x_proj, y_proj, origin) {
             // amount of original image to draw
             this.width, this.frame.height,
             // offset on the canvas to start drawing
-            top_left.elements[0], top_left.elements[1] - this.region.height,
+            top_left.elements[0], top_left.elements[1] - this.region.get_height(this.position),
             // actual size of drawn image on canvas
             this.width, this.frame.height
         );

@@ -99,3 +99,5 @@ function _(x, msg) {
     }
     return x;
 }
+
+print = function(x){console.debug(x.toString())}

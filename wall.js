@@ -14,7 +14,6 @@ Wall.create = function(pts, ht, base) {
 }
 $W = Wall.create;
 
-Wall.prototype.
 
 Wall.prototype.rotate = function(angle, centre) {
     for (var i in this.elements) {

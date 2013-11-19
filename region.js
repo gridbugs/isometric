@@ -36,11 +36,15 @@ Region.create = function(elements, height, walls, regions, visible, characters) 
         r.walls[i].base = height;
     }
 
+
     return r;
 }
-
 // A short name for creating regions
 $R = Region.create;
+
+Region.prototype.get_height = function() {
+    return this.height;
+}
 
 Region.prototype.flush_sprites = function() {
     this.sprite_segments = [];
@@ -174,3 +178,111 @@ Region.prototype.generate_draw_order = function(away, left_to_right) {
     this.draw_order = flatten(this.draw_order);
     return this.draw_order;
 }
+
+/*
+ * A sloped region is a region that can have a gradient.
+ * Most of the methods defined for Region still apply, so
+ * a Region instance will be used as a prototype.
+ */
+function SlopedRegion(){}
+SlopedRegion.prototype = new Region();
+
+SlopedRegion.prototype.get_height = function(p, q) {
+    var a = this.slope.constant -
+           this.slope.xcoef * p.elements[0] -
+           this.slope.ycoef * p.elements[1];
+
+
+//   console.debug(this.slope.toString() + " | " + p.elements[0] + ", " + p.elements[1] + ", " + a);
+
+    return a;
+}
+
+/*
+ * Returns a region that can have a gradient, defined by three points
+ * on the plane. The points are given in the "slope_references" argument
+ * and are 3d vectors.
+ */
+SlopedRegion.create = function(elements, slope_references, visible) {
+    var r = new SlopedRegion();
+
+    r.elements = elements.map($V);
+
+    r.visible = visible;
+    r.slope_references = slope_references.map($V);
+    r.calculate_coefficients();
+    // give it some properties to make it work with region
+    r.regions = [];
+    r.walls = [];
+    return r;
+}
+
+SlopedRegion.prototype.calculate_coefficients = function() {
+    var p1, p2, p3;
+    p1 = this.slope_references[0];
+    p2 = this.slope_references[1];
+    p3 = this.slope_references[2];
+    var p = p1;
+
+    // normal vector to plane
+    var n = p2.subtract(p1).cross(p3.subtract(p1));
+
+    /* ratio of x and z components of normal (useful constant)
+     * this is the coefficient of x in the cartesian equation of the plane
+     */
+    var nxz = n.elements[0] / n.elements[2];
+
+    /* ratio of y and z components of normal (useful constant)
+     * this is the coefficient of y in the cartesian equation of the plane
+     */
+    var nyz = n.elements[1] / n.elements[2];
+
+    // this is the constant in the cartesian equation of the plane
+    var c = nxz * p.elements[0] + nyz * p.elements[1] + p.elements[2];
+
+    /* these values describe the slope of the region as the coefficients
+     * of an equation to calculate the height of a given point:
+     * h(x, y) = - nxz * x - nyz * y + c
+     */
+    this.slope = {
+        xcoef: nxz,
+        ycoef: nyz,
+        constant: c,
+        toString: function(){return "slope: " + nxz + ", " + nyz + ", " + c}
+    };
+
+
+}
+
+
+/* This is extended to update the coefficients after rotating */
+SlopedRegion.prototype.rotate = function(angle, centre) {
+    for (var i in this.elements) {
+        this.elements[i].elements = this.elements[i].elements.slice(0, 2);
+        this.elements[i] = this.elements[i].rotate(angle, centre);
+    }
+    for (var i in this.walls) {
+        this.walls[i].rotate(angle, centre);
+    }
+    for (var i in this.regions) {
+        this.regions[i].rotate(angle, centre);
+    }
+    for (var i in this.characters) {
+        this.characters[i].rotate(angle, centre);
+    }
+
+    /* the slope references are 3d vectors but this rotation only
+     * occurs in 2 dimensions, so we need to make a 2d copy of the
+     * slope references with the heights removed */
+    this.slope_references =
+        this.slope_references.map(
+            function(x){
+                return $V($V(x.elements.slice(0,2)).rotate(angle, centre).elements.concat([x.elements[2]]));
+            }
+        );
+    print(this.slope_references);
+    this.calculate_coefficients();
+}
+
+
+$SR = SlopedRegion.create;

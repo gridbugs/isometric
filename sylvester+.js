@@ -16,3 +16,7 @@ Vector.prototype.to2d = function() {
 Vector.prototype.projectOn = function(v) {
   return v.multiply(this.dot(v)/v.dot(v));
 };
+
+Vector.prototype.toString = function() {
+    return "V[" + this.elements.toString() + "]";
+};

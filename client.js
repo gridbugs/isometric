@@ -36,13 +36,21 @@ $(ImageLoader.load_async(["marine_sheet.gif"], function(images){
     var size1 = 50;
     var size2 = 20;
     world =
-    $R([
+    $R(
+    /* list of points around the convex polygon containing the world*/
+    [
         [0, 0],
         [0, 40],
         [40, 40],
         [40, 0]
-    ], 0,
+    ],
+
+    /* base height for the world */
+    0,
+
+    /* list of walls in the world */
     [
+        /*
         $W([[0,0],[0,40]]),
         $W([[0,40],[40,40]]),
         $W([[40,40],[40,0]]),
@@ -51,15 +59,23 @@ $(ImageLoader.load_async(["marine_sheet.gif"], function(images){
         $W([[20,20],[20,10]]),
         $W([[20,5],[20,0]]),
         $W([[20,25],[20,40]]),
-        $W([[20,20],[40,20]]),
+        $W([[20,20],[40,20]]), */
     ],
+
+    /* list of regions in the world */
     [
-        $R([
+        $SR([
             [0, 0],
             [20, 0],
             [20, 20],
             [0, 20]
-        ], /*height*/50 , [], [], true),
+        ],
+        [
+            [0, 0, 20],
+            [20, 0, 0],
+            [20, 20, 0],
+        ],
+        true),
 
         $R([
             [20, 0],
@@ -73,18 +89,23 @@ $(ImageLoader.load_async(["marine_sheet.gif"], function(images){
             [20, 20],
             [20, 40],
             [0, 40]
-        ], 0, [], [], true),
-
+        ], 20, [], [], true),
+        /*
         $R([
             [20, 20],
             [40, 20],
             [40, 40],
             [20, 40]
         ], 0, [], [], true)
+        */
 
 
     ],
+
+    /* are the borders of the world visible? */
     false,
+
+    /* list of characters */
     [
         ch
     ]);
