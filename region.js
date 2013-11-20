@@ -204,7 +204,7 @@ SlopedRegion.prototype.get_height = function(p, q) {
  */
 SlopedRegion.create = function(elements, slope_references, visible) {
     var r = new SlopedRegion();
-
+    console.debug(r.constructor);
     r.elements = elements.map($V);
 
     r.visible = visible;
@@ -214,6 +214,17 @@ SlopedRegion.create = function(elements, slope_references, visible) {
     r.regions = [];
     r.walls = [];
     return r;
+}
+
+Region.prototype.equal_gradient = function(r) {
+    if (r.slope && this.slope) {
+        return r.slope.xcoef == this.slope.xcoef && r.slope.ycoef == this.slope.ycoef;
+    } else if (r.slope) {
+        return r.slope.xcoef == 0 && r.slope.ycoef == 0;
+    } else if (this.slope) {
+        return this.slope.xcoef == 0 && this.slope.ycoef == 0;
+    }
+    return true; // two non-sloped regions have the same gradient
 }
 
 SlopedRegion.prototype.calculate_coefficients = function() {

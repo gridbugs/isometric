@@ -90,5 +90,12 @@ DrawOrder.arrange = function(walls, away) {
         to_add = null;
     }
 
+    /* make sure each region knows its position in the order */
+    for (var i in order) {
+        if (order[i].is_virtual) {
+            order[i].region.draw_order_position = i;
+        }
+    }
+
     return order;
 }

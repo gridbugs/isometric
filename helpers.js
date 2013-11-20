@@ -100,4 +100,9 @@ function _(x, msg) {
     return x;
 }
 
-print = function(x){console.debug(x.toString())}
+var print = function(x){console.debug(x.toString())}
+function assert(x, message) {
+    if (!x) {
+        alert("Assertion failed: " + message);
+    }
+}
