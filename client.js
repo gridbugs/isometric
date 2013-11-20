@@ -26,7 +26,7 @@ $(ImageLoader.load_async(["marine_sheet.gif"], function(images){
     s.add_sequence("stand", ["stand"], false);
     s.current_sequence = "walk_front";
 
-    var ch = $CH($V([10, 5]), 100 / drawer.horizontal_unit, s);
+    var ch = $CH($V([10, 5]), 50 / drawer.horizontal_unit, s);
 
 
 
@@ -237,10 +237,11 @@ $(ImageLoader.load_async(["marine_sheet.gif"], function(images){
 
         draw_arr(order);
         draw_arr(world.characters);
+/*
         for (var i in borders) {
             borders[i].draw();
         }
-
+*/
         setTimeout(draw, 33);
     }
 

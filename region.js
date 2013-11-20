@@ -192,8 +192,6 @@ SlopedRegion.prototype.get_height = function(p, q) {
            this.slope.xcoef * p.elements[0] -
            this.slope.ycoef * p.elements[1];
 
-
-
     return a;
 }
 
@@ -204,7 +202,6 @@ SlopedRegion.prototype.get_height = function(p, q) {
  */
 SlopedRegion.create = function(elements, slope_references, visible) {
     var r = new SlopedRegion();
-    console.debug(r.constructor);
     r.elements = elements.map($V);
 
     r.visible = visible;

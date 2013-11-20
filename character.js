@@ -35,7 +35,6 @@ Character.prototype.get_height = function(offset) {
     } else {
         p = this.position.add($V([offset, 0, 0]));
     }
-    console.debug(p);
     var r = this.find_current_region(p);
     if (r == null) {
         return 0;
@@ -82,7 +81,8 @@ Character.prototype.locate_self = function() {
             rhs_region = edge.regions[0];
         }
 
-        return {along: along, lhs_region: lhs_region, rhs_region: rhs_region};
+
+        return {along: along, lhs_region: lhs_region, rhs_region: rhs_region, base: base, ict: ict};
     });
 
     if (base_breaks.length == 0) {
@@ -90,7 +90,7 @@ Character.prototype.locate_self = function() {
             this.current_region = this.find_current_region();
         }
         this.current_region.sprite_segments.push(
-            $SS(this.sprite, this.position, 0, 1, this.current_region, this));
+            $SS(this.sprite, this.position, 0, 1, this.current_region, this, base));
         return;
     }
     this.current_region = null;
@@ -101,11 +101,12 @@ Character.prototype.locate_self = function() {
      * create an array of segments - these represent parts of the base,
      * each existing in a separate region
      */
-    var segments = [{left: 0, right: base_breaks[0].along, region: base_breaks[0].lhs_region,
+    var segments = [{left: 0, right: base_breaks[0].along, region: base_breaks[0].lhs_region, base: base_breaks[0].base,
             toString: function(){return "{"+this.left + ", " + this.right+"}"}
     }];
     for (var i = 1;i!=base_breaks.length;++i) {
         segments[i] = {
+            base: base_breaks[i-1].base,
             left: base_breaks[i-1].along,
             right: base_breaks[i].along,
             region: base_breaks[i].lhs_region,
@@ -113,6 +114,7 @@ Character.prototype.locate_self = function() {
         };
     }
     segments.push({
+        base: segments[segments.length-1].base,
         left: segments[segments.length-1].right,
         right: 1,
         region: base_breaks[base_breaks.length-1].rhs_region,
@@ -132,7 +134,6 @@ Character.prototype.locate_self = function() {
         } else if (s.region.equal_gradient(t.region)) {
             new_segments.push(s);
         } else {
-            console.debug("merge");
             // determine which region is drawn last
             var last_drawn;
             if (s.region.draw_order_position > t.region.draw_order_position) {
@@ -141,6 +142,7 @@ Character.prototype.locate_self = function() {
                 last_drawn = t.region;
             }
             new_segments.push({
+                base: s.base,
                 left: s.left,
                 right: t.right,
                 region: last_drawn
@@ -149,11 +151,10 @@ Character.prototype.locate_self = function() {
         }
     }
     segments = new_segments;
-    console.debug(segments);
 
     for (var i in segments) {
         segments[i].region.sprite_segments.push(
-            $SS(this.sprite, this.position, segments[i].left, segments[i].right, segments[i].region, this)
+            $SS(this.sprite, this.position, segments[i].left, segments[i].right, segments[i].region, this, segments[i].base)
         );
     }
 

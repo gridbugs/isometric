@@ -129,10 +129,20 @@ function IsometricDrawer(name, x_proj, y_proj, origin) {
             this.width, this.frame.height
         );
 
+/*
         drawer.ctx.strokeStyle = "red";
         drawer.ctx.beginPath();
         drawer.ctx.strokeRect(top_left.elements[0], top_left.elements[1] - this.height, this.width, this.frame.height);
         drawer.ctx.stroke();
+
+        var a = drawer.convert(this.base.elements[0]);
+        var b = drawer.convert(this.base.elements[1]);
+        drawer.ctx.strokeStyle = "green";
+        drawer.ctx.beginPath();
+        drawer.ctx.moveTo(a.elements[0], a.elements[1]);
+        drawer.ctx.lineTo(b.elements[0], b.elements[1]);
+        drawer.ctx.stroke();
+*/
     }
 }
 
