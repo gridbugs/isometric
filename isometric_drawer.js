@@ -124,18 +124,16 @@ function IsometricDrawer(name, x_proj, y_proj, origin) {
             // amount of original image to draw
             this.width, this.frame.height,
             // offset on the canvas to start drawing
-            top_left.elements[0], top_left.elements[1] - this.region.get_height(this.position),
+            top_left.elements[0], top_left.elements[1] - this.height,
             // actual size of drawn image on canvas
             this.width, this.frame.height
         );
-
-     /*   
+/*
         drawer.ctx.strokeStyle = "red";
         drawer.ctx.beginPath();
         drawer.ctx.strokeRect(top_left.elements[0], top_left.elements[1], this.width, this.frame.height);
         drawer.ctx.stroke();
-    */
-        
+*/
     }
 }
 

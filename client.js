@@ -237,12 +237,11 @@ $(ImageLoader.load_async(["marine_sheet.gif"], function(images){
 
         draw_arr(order);
         draw_arr(world.characters);
-        
-        /*
+/*
         for (var i in borders) {
             borders[i].draw();
         }
-        */
+*/
 
         setTimeout(draw, 33);
     }

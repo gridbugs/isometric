@@ -26,6 +26,14 @@ Character.prototype.base = function() {
                 [this.position.elements[0] + this.radius, this.position.elements[1]]]);
 }
 
+Character.prototype.get_height = function() {
+    var r = this.find_current_region();
+    if (r == null) {
+        return 0;
+    }
+    return r.get_height(this.position);
+}
+
 Character.prototype.locate_self = function() {
     var ch = this;
     var base = this.base();
@@ -73,7 +81,7 @@ Character.prototype.locate_self = function() {
             this.current_region = this.find_current_region();
         }
         this.current_region.sprite_segments.push(
-            $SS(this.sprite, this.position, 0, 1, this.current_region));
+            $SS(this.sprite, this.position, 0, 1, this.current_region, this.get_height()));
         return;
     }
     this.current_region = null;
@@ -100,7 +108,8 @@ Character.prototype.locate_self = function() {
 
     for (var i in segments) {
         segments[i].region.sprite_segments.push(
-            $SS(this.sprite, this.position, segments[i].left, segments[i].right, segments[i].region));
+            $SS(this.sprite, this.position, segments[i].left, segments[i].right, segments[i].region, this.get_height())
+        );
     }
 
 }
