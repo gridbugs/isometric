@@ -137,7 +137,8 @@ function IsometricDrawer(name, x_proj, y_proj, origin) {
         );
 
         if (this.start == 0) {
-            drawer.player_top_left = top_left;
+            drawer.player_top_left_x = top_left.elements[0];
+            drawer.player_top_left_y = top_left.elements[1] - this.height;
         }
 
         if (this.end == 1) {

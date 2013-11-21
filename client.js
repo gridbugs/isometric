@@ -263,8 +263,8 @@ $(ImageLoader.load_async([
         back_face.draw(drawer.fb.ctx);
 
         var player_mid = {
-            x: drawer.player_top_left.elements[0] + drawer.player_width/2,
-            y: drawer.player_top_left.elements[1] + drawer.player_height/2
+            x: drawer.player_top_left_x + drawer.player_width/2,
+            y: drawer.player_top_left_y + drawer.player_height/2
         };
         var cover_width = 150;
         var cover_height = 150;
