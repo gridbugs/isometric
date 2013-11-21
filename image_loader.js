@@ -20,7 +20,11 @@ ImageLoader.load_async = function(src_array, callback) {
      */
     var wait = function(period, retries) {
         if (num_loaded == images.length) {
-            callback(images);
+            var images_hash = [];
+            zip_with(function(image, src) {
+                images_hash[src] = image;
+            }, images, src_array);
+            callback(images_hash);
             return;
         }
         if (retries == 0) {

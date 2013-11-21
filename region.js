@@ -13,7 +13,7 @@ function Region(){}
 // This will contain each shared edge
 Region.shared_edges = [];
 
-Region.create = function(elements, height, walls, regions, visible, characters) {
+Region.create = function(elements, height, walls, regions, visible, characters, positioned_image) {
     var r = new Region();
     r.elements = elements.map($V);
     r.walls = walls;
@@ -21,6 +21,7 @@ Region.create = function(elements, height, walls, regions, visible, characters) 
     r.height = height;
     r.characters = default_value(characters, []);
     r.visible = default_value(visible, false);
+    r.positioned_image = positioned_image;
 
     /*
      * This is an array of walls representing regions. For each sub-region
@@ -200,10 +201,10 @@ SlopedRegion.prototype.get_height = function(p, q) {
  * on the plane. The points are given in the "slope_references" argument
  * and are 3d vectors.
  */
-SlopedRegion.create = function(elements, slope_references, visible) {
+SlopedRegion.create = function(elements, slope_references, visible, positioned_image) {
     var r = new SlopedRegion();
     r.elements = elements.map($V);
-
+    r.positioned_image = positioned_image;
     r.visible = visible;
     r.slope_references = slope_references.map($V);
     r.calculate_coefficients();

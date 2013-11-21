@@ -89,6 +89,9 @@ Character.prototype.locate_self = function() {
         if (this.current_region == null) {
             this.current_region = this.find_current_region();
         }
+        if (this.current_region == null) {
+            return;
+        }
         this.current_region.sprite_segments.push(
             $SS(this.sprite, this.position, 0, 1, this.current_region, this, base));
         return;
@@ -136,7 +139,7 @@ Character.prototype.locate_self = function() {
         } else {
             // determine which region is drawn last
             var last_drawn;
-            if (s.region.draw_order_position > t.region.draw_order_position) {
+            if (s.region.draw_order_position < t.region.draw_order_position) {
                 last_drawn = s.region;
             } else {
                 last_drawn = t.region;

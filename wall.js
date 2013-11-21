@@ -1,9 +1,10 @@
 function Wall() {};
 Wall.prototype = new LineSegment();
-Wall.create = function(pts, ht, base) {
+Wall.create = function(pts, positioned_image, ht, base) {
     var w = new Wall();
     w.setVectors(pts.map($V));
     w.height = default_value(ht, 60);
+    w.positioned_image = positioned_image;
 
     if (base == undefined) {
         w.base = 0;

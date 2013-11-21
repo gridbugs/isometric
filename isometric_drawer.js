@@ -8,6 +8,12 @@ function IsometricDrawer(name, x_proj, y_proj, origin) {
     this.y_proj = y_proj;
     this.origin = origin;
 
+    // create a frame buffer for rendering to before preprocessing
+    this.fb = $FB(1400, 800);
+
+    // flag used in each frame to determine if the character has been drawn yet
+    this.player_drawn = false;
+
     var x_len = x_proj.modulus();
     var y_len = y_proj.modulus();
     this.horizontal_unit = Math.sqrt(x_len*x_len+y_len*y_len);
@@ -27,66 +33,67 @@ function IsometricDrawer(name, x_proj, y_proj, origin) {
         drawer.ctx.lineToV(drawer.convert(this.elements[1]));
         drawer.ctx.stroke();
     }
+
+    PositionedImage.prototype.draw = function(ctx_arg) {
+        var ctx = ctx_arg == undefined ? drawer.ctx : ctx_arg;
+        if (this.image) {
+            ctx.drawImage(this.image, this.position[0], this.position[1]);
+        }
+    }
+
     Wall.prototype.draw = function() {
+        var ctx;
+        if (drawer.player_drawn) {
+            ctx = drawer.fb.ctx;
+        } else {
+            ctx = drawer.ctx;
+        }
+        
+        if (this.positioned_image) {
+            this.positioned_image.draw(ctx);
+            return;
+        }
         var c_elements = [];
         for (var i in this.elements) {
             c_elements[i] = drawer.convert(this.elements[i]).subtract($V([0, this.base]));
         }
 
-        drawer.ctx.fillStyle = "white";
-        drawer.ctx.strokeStyle = "black";
-        drawer.ctx.lineWidth = 2;
-        drawer.ctx.beginPath();
-        drawer.ctx.moveToV(c_elements[0]);
-        drawer.ctx.lineToV(c_elements[1]);
-        drawer.ctx.lineToV(c_elements[1].subtract($V([0, this.height])));
-        drawer.ctx.lineToV(c_elements[0].subtract($V([0, this.height])));
-        drawer.ctx.lineToV(c_elements[0]);
-        drawer.ctx.stroke();
-        drawer.ctx.fill();
+        ctx.fillStyle = "white";
+        ctx.strokeStyle = "black";
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveToV(c_elements[0]);
+        ctx.lineToV(c_elements[1]);
+        ctx.lineToV(c_elements[1].subtract($V([0, this.height])));
+        ctx.lineToV(c_elements[0].subtract($V([0, this.height])));
+        ctx.lineToV(c_elements[0]);
+        ctx.stroke();
+        ctx.fill();
 
     }
 
     Region.prototype.draw = function() {
         if (this.visible) {
-            var c_elements = [];
-            for (var i in this.elements) {
-                c_elements[i] = drawer.convert(this.elements[i]);
-            }
+            if (this.positioned_image) {
+                this.positioned_image.draw();
+            } else {
 
-            drawer.ctx.strokeStyle = "black";
-            drawer.ctx.lineWidth = 2;
-            drawer.ctx.fillStyle = "white";
-            drawer.ctx.beginPath();
-            drawer.ctx.moveToV(c_elements[c_elements.length-1].subtract($V([0, this.get_height(this.elements[this.elements.length - 1]) ])));
-            for (var i in c_elements) {
-                drawer.ctx.lineToV(c_elements[i].subtract($V([0, this.get_height(this.elements[i])])));
-            }
-            drawer.ctx.fill();
-            drawer.ctx.stroke();
-        }
-        for (var i in this.sprite_segments) {
-            this.sprite_segments[i].draw();
-        }
-    }
+                var c_elements = [];
+                for (var i in this.elements) {
+                    c_elements[i] = drawer.convert(this.elements[i]);
+                }
 
-    SlopedRegion.prototype.draw = function() {
-        if (this.visible) {
-            var c_elements = [];
-            for (var i in this.elements) {
-                c_elements[i] = drawer.convert(this.elements[i]);
+                drawer.ctx.strokeStyle = "black";
+                drawer.ctx.lineWidth = 2;
+                drawer.ctx.fillStyle = "white";
+                drawer.ctx.beginPath();
+                drawer.ctx.moveToV(c_elements[c_elements.length-1].subtract($V([0, this.get_height(this.elements[this.elements.length - 1]) ])));
+                for (var i in c_elements) {
+                    drawer.ctx.lineToV(c_elements[i].subtract($V([0, this.get_height(this.elements[i])])));
+                }
+                drawer.ctx.fill();
+                drawer.ctx.stroke();
             }
-
-            drawer.ctx.strokeStyle = "black";
-            drawer.ctx.lineWidth = 2;
-            drawer.ctx.fillStyle = "white";
-            drawer.ctx.beginPath();
-            drawer.ctx.moveToV(c_elements[c_elements.length-1].subtract($V([0, this.get_height(this.elements[this.elements.length - 1]) ])));
-            for (var i in c_elements) {
-                drawer.ctx.lineToV(c_elements[i].subtract($V([0, this.get_height(this.elements[i])])));
-            }
-            drawer.ctx.fill();
-            drawer.ctx.stroke();
         }
         for (var i in this.sprite_segments) {
             this.sprite_segments[i].draw();
@@ -129,6 +136,16 @@ function IsometricDrawer(name, x_proj, y_proj, origin) {
             this.width, this.frame.height
         );
 
+        if (this.start == 0) {
+            drawer.player_top_left = top_left;
+        }
+
+        if (this.end == 1) {
+            drawer.player_width = this.width;
+            drawer.player_height = this.frame.height;
+            drawer.player_drawn = true;
+        }
+
 /*
         drawer.ctx.strokeStyle = "red";
         drawer.ctx.beginPath();
@@ -154,4 +171,5 @@ IsometricDrawer.prototype.convert = function(v) {
 }
 IsometricDrawer.prototype.clear = function() {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    this.fb.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 }
