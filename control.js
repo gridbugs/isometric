@@ -6,7 +6,7 @@ const KEY_DOWN=40;
 const KEY_W=87;
 const KEY_A=65;
 const KEY_S=83;
-const KEY_D=84;
+const KEY_D=68;
 const KEY_COMMA=188;
 const KEY_O=79;
 const KEY_E=69;
@@ -39,6 +39,7 @@ function Control(character, acc, max_speed, left, right, up, down){
 
 Control.prototype.key_down = function(code) {
     this.keys_down[code] = true;
+    console.debug(code);
 }
 Control.prototype.key_up = function(code) {
     this.keys_down[code] = false;
